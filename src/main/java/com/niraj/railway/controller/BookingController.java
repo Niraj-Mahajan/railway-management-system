@@ -5,6 +5,8 @@ import com.niraj.railway.dto.BookingResponseDTO;
 import com.niraj.railway.entity.Booking;
 import com.niraj.railway.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,31 +19,32 @@ public class BookingController {
     private BookingService bookingservice;
 
     @PostMapping
-    public BookingResponseDTO createBooking(@RequestBody Booking booking){
-        return bookingservice.addBooking(booking);
+    public ResponseEntity<BookingResponseDTO> createBooking(@RequestBody Booking booking){
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingservice.addBooking(booking));
     }
     @GetMapping
-    public List<BookingResponseDTO> getAllBooking(){
-        return  bookingservice.getAllBooking();
+    public ResponseEntity<List<BookingResponseDTO>> getAllBooking(){
+        return  ResponseEntity.ok(bookingservice.getAllBooking());
     }
     @GetMapping("/{id}")
-    public BookingResponseDTO getBookingById(@PathVariable("id") Long id){
-        return bookingservice.getBookingById(id);
+    public ResponseEntity<BookingResponseDTO> getBookingById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(bookingservice.getBookingById(id));
     }
 
     @PutMapping("/{id}")
-    public BookingResponseDTO updateBooking(@PathVariable("id") Long id, @RequestBody Booking booking){
+    public ResponseEntity<BookingResponseDTO> updateBooking(@PathVariable("id") Long id, @RequestBody Booking booking){
 
-        return bookingservice.updateBooking(id, booking);
+        return ResponseEntity.ok(bookingservice.updateBooking(id, booking));
     }
 
     @PutMapping("/{id}/cancel")
-    public BookingResponseDTO cancelBooking(@PathVariable("id") Long id) {
-        return bookingservice.cancelBooking(id);
+    public ResponseEntity<BookingResponseDTO> cancelBooking(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(bookingservice.cancelBooking(id));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBooking(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deleteBooking(@PathVariable("id") Long id){
         bookingservice.deleteBooking(id);
+        return ResponseEntity.noContent().build();
     }
 }

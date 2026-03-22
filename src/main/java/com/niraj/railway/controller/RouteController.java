@@ -5,6 +5,8 @@ import com.niraj.railway.dto.RouteResponseDTO;
 import com.niraj.railway.entity.Route;
 import com.niraj.railway.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,27 +19,28 @@ public class RouteController {
     private RouteService routeservice;
 
     @PostMapping
-    public RouteResponseDTO addRoute (@RequestBody Route route) {
-        return routeservice.addRoute(route);
+    public ResponseEntity<RouteResponseDTO> addRoute (@RequestBody Route route) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(routeservice.addRoute(route));
     }
 
     @GetMapping
-    public List<RouteResponseDTO> getAllRoutes(){
-        return routeservice.getAllRoutes();
+    public ResponseEntity<List<RouteResponseDTO>> getAllRoutes(){
+        return ResponseEntity.ok(routeservice.getAllRoutes());
     }
 
     @GetMapping("/{id}")
-    public RouteResponseDTO getRouteById(@PathVariable("id") Long id){
+    public ResponseEntity<RouteResponseDTO> getRouteById(@PathVariable("id") Long id){
 
-        return  routeservice.getRouteById(id);
+        return  ResponseEntity.ok(routeservice.getRouteById(id));
     }
     @PutMapping("/{id}")
-    public RouteResponseDTO updateRoute(@PathVariable("id") Long id, @RequestBody Route route){
-        return routeservice.updateRoute(id, route);}
+    public ResponseEntity<RouteResponseDTO> updateRoute(@PathVariable("id") Long id, @RequestBody Route route){
+        return ResponseEntity.ok(routeservice.updateRoute(id, route));}
 
     @DeleteMapping("/{id}")
-    public void deleteRouteById(@PathVariable("id") Long id)   {
+    public ResponseEntity<Void> deleteRouteById(@PathVariable("id") Long id)   {
         routeservice.deleteRoute(id);
+        return ResponseEntity.noContent().build();
         }
 
     }

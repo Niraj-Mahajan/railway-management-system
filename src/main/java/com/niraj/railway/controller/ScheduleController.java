@@ -4,6 +4,8 @@ import com.niraj.railway.dto.ScheduleResponseDTO;
 import com.niraj.railway.entity.Schedule;
 import com.niraj.railway.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,27 +18,28 @@ public class ScheduleController {
     private ScheduleService scheduleService;
 
     @PostMapping
-    public ScheduleResponseDTO addSchedule(@RequestBody Schedule schedule){
-        return scheduleService.addSchedule(schedule);
+    public ResponseEntity<ScheduleResponseDTO> addSchedule(@RequestBody Schedule schedule){
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.addSchedule(schedule));
     }
     @GetMapping
-    public List<ScheduleResponseDTO> getAllSchedules(){
-        return scheduleService.getAllSchedules();
+    public ResponseEntity<List<ScheduleResponseDTO>> getAllSchedules(){
+        return ResponseEntity.ok(scheduleService.getAllSchedules());
     }
 
     @GetMapping("/{id}")
-    public ScheduleResponseDTO getScheduleById(@PathVariable("id") Long id){
-        return scheduleService.getScheduleById(id);
+    public ResponseEntity<ScheduleResponseDTO> getScheduleById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(scheduleService.getScheduleById(id));
     }
 
     @PutMapping("/{id}")
-    public ScheduleResponseDTO updateSchedule(@PathVariable("id") Long id, @RequestBody Schedule schedule){
-        return scheduleService.updateSchedule(id, schedule);
+    public ResponseEntity<ScheduleResponseDTO> updateSchedule(@PathVariable("id") Long id, @RequestBody Schedule schedule){
+        return ResponseEntity.ok(scheduleService.updateSchedule(id, schedule));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSchedule(@PathVariable("id") Long id)
+    public ResponseEntity<Void> deleteSchedule(@PathVariable("id") Long id)
     {
         scheduleService.deleteSchedule(id);
+        return ResponseEntity.noContent().build();
     }
 }
