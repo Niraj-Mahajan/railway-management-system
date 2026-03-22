@@ -1,11 +1,13 @@
 package com.niraj.railway.service;
 
+import com.niraj.railway.dto.TrainResponseDTO;
 import com.niraj.railway.entity.Train;
 import com.niraj.railway.repository.TrainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainService {
@@ -13,26 +15,45 @@ public class TrainService {
     @Autowired
     private TrainRepository trainRepository;
 
-    public Train addTrain(Train train)
-    {
-        return trainRepository.save(train);
+    // Convert Train to DTO
+    private TrainResponseDTO convertToDTO(Train train) {
+        return new TrainResponseDTO(
+                train.getTrainId(),
+                train.getTrainName(),
+                train.getTrainNumber(),
+                train.getTotalSeats(),
+                train.getStatus()
+        );
     }
-    public List<Train> getAllTrains(){
-        return trainRepository.findAll();
+
+    public TrainResponseDTO addTrain(Train train) {
+        Train saved = trainRepository.save(train);
+        return convertToDTO(saved);
     }
-    public Train  getTrainById(Long id)
-    {
-        return trainRepository.findById(id).orElseThrow(()-> new RuntimeException("Train not found"));
+    public List<TrainResponseDTO> getAllTrains() {
+        return trainRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
-    public Train updateTrain(Long id, Train train){
-        Train existing = getTrainById(id);
+    public TrainResponseDTO getTrainById(Long id) {
+        Train train = trainRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Train not found"));
+        return convertToDTO(train);
+    }
+
+
+    public TrainResponseDTO updateTrain(Long id, Train train) {
+        Train existing = trainRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Train not found"));
         existing.setTrainName(train.getTrainName());
         existing.setTrainNumber(train.getTrainNumber());
         existing.setTotalSeats(train.getTotalSeats());
         existing.setStatus(train.getStatus());
-        return trainRepository.save(existing);
-
+        return convertToDTO(trainRepository.save(existing));
     }
+
+
     public void deleteTrainById(Long id)
     {
         trainRepository.deleteById(id);

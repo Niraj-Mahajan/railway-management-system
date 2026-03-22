@@ -1,5 +1,6 @@
 package com.niraj.railway.service;
 
+import com.niraj.railway.dto.BookingResponseDTO;
 import com.niraj.railway.entity.Booking;
 import com.niraj.railway.entity.Schedule;
 import com.niraj.railway.repository.BookingRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -18,8 +20,21 @@ public class BookingService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
+//convert Booking to DTO
+    public BookingResponseDTO convertToDTO(Booking booking) {
+        return new BookingResponseDTO(
+                booking.getBookingId(),
+                booking.getPassenger().getName(),
+                booking.getSchedule().getTrain().getTrainName(),
+                booking.getSchedule().getRoute().getRouteName(),
+                booking.getSeatNumber(),
+                booking.getBookingDate(),
+                booking.getStatus()
+        );
 
-    public Booking addBooking(Booking booking){
+    }
+
+    public BookingResponseDTO addBooking(Booking booking){
 
         //  Get the schedule
         Schedule schedule = scheduleRepository.findById(booking.getSchedule().getScheduleId())
@@ -36,32 +51,36 @@ public class BookingService {
 
         //  Save booking
         booking.setStatus("CONFIRMED");
-        return bookingRepository.save(booking);
+        return convertToDTO(bookingRepository.save(booking));
     }
-    public List<Booking> getAllBooking(){
-        return bookingRepository.findAll();
-    }
-
-    public Booking getBookingById(Long id){
-
-        return  bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
+    public List<BookingResponseDTO> getAllBooking(){
+        return bookingRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Booking updateBooking(Long id, Booking booking){
+    public BookingResponseDTO getBookingById(Long id){
 
-         Booking existing = getBookingById(id);
+       Booking booking =   bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
+       return convertToDTO(booking);
+    }
+
+    public BookingResponseDTO updateBooking(Long id, Booking booking){
+
+         Booking existing = bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
          existing.setPassenger(booking.getPassenger());
          existing.setSchedule(booking.getSchedule());
          existing.setSeatNumber(booking.getSeatNumber());
          existing.setBookingDate(booking.getBookingDate());
          existing.setStatus(booking.getStatus());
-         return bookingRepository.save(existing);
+         return convertToDTO(bookingRepository.save(existing));
 
     }
 
-    public Booking cancelBooking(Long id) {
+    public BookingResponseDTO cancelBooking(Long id) {
         //  Get booking
-        Booking existing = getBookingById(id);
+        Booking existing = bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
 
         // Check if already cancelled
         if (existing.getStatus().equals("CANCELLED")) {
@@ -75,7 +94,7 @@ public class BookingService {
 
         //  Update status
         existing.setStatus("CANCELLED");
-        return bookingRepository.save(existing);
+        return convertToDTO(bookingRepository.save(existing));
     }
 
     public void deleteBooking(Long id){

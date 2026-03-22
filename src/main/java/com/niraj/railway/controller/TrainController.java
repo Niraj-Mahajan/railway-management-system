@@ -1,6 +1,7 @@
 package com.niraj.railway.controller;
 
 
+import com.niraj.railway.dto.TrainResponseDTO;
 import com.niraj.railway.entity.Train;
 import com.niraj.railway.service.TrainService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,24 +13,25 @@ import java.util.List;
 @RequestMapping("/api/trains")
 public class TrainController {
 
+
     @Autowired
     private TrainService trainService;
 
     @PostMapping
-    public Train addTrain(@RequestBody Train train){
+    public TrainResponseDTO addTrain(@RequestBody Train train){
         return trainService.addTrain(train);
     }
     @GetMapping
-    public List<Train> getAllTrains(){
+    public List<TrainResponseDTO > getAllTrains(){
         return trainService.getAllTrains();
     }
     @GetMapping("/{id}")
-    public Train getTrainById(@PathVariable("id") Long id)
+    public TrainResponseDTO  getTrainById(@PathVariable("id") Long id)
     {
         return trainService.getTrainById(id);
     }
     @PutMapping("/{id}")
-    public Train updateTrain( @PathVariable("id") Long id, @RequestBody Train train){
+    public TrainResponseDTO  updateTrain( @PathVariable("id") Long id, @RequestBody Train train){
         return trainService.updateTrain(id,train);
     }
 

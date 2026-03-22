@@ -1,5 +1,6 @@
 package com.niraj.railway.controller;
 
+import com.niraj.railway.dto.StationResponseDTO;
 import com.niraj.railway.entity.Station;
 import com.niraj.railway.entity.Train;
 import com.niraj.railway.service.StationService;
@@ -19,25 +20,25 @@ public class StationController {
 
 
     @PostMapping
-    public Station addTrain(@RequestBody Station station){
+    public StationResponseDTO addStation(@RequestBody Station station){
         return stationservice.addStation(station);
     }
     @GetMapping
-    public List<Station> getAllStations(){
+    public List<StationResponseDTO> getAllStations(){
         return stationservice.getAllStations();
     }
     @GetMapping("/{id}")
-    public Station getTrainById(@PathVariable("id") Long id)
+    public StationResponseDTO getStationById(@PathVariable("id") Long id)
     {
         return stationservice.getStationByID(id);
     }
     @PutMapping("/{id}")
-    public Station updateTrain( @PathVariable("id") Long id, @RequestBody Station station){
+    public StationResponseDTO updateStation( @PathVariable("id") Long id, @RequestBody Station station){
         return stationservice.updateStation(id,station);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTrainById(@PathVariable("id") Long id){
+    public void deleteStationById(@PathVariable("id") Long id){
         stationservice.deleteStation(id);
     }
 

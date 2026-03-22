@@ -1,6 +1,7 @@
 package com.niraj.railway.controller;
 
 
+import com.niraj.railway.dto.BookingResponseDTO;
 import com.niraj.railway.entity.Booking;
 import com.niraj.railway.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,26 +17,26 @@ public class BookingController {
     private BookingService bookingservice;
 
     @PostMapping
-    public Booking createBooking(@RequestBody Booking booking){
+    public BookingResponseDTO createBooking(@RequestBody Booking booking){
         return bookingservice.addBooking(booking);
     }
     @GetMapping
-    public List<Booking> getAllBooking(){
+    public List<BookingResponseDTO> getAllBooking(){
         return  bookingservice.getAllBooking();
     }
     @GetMapping("/{id}")
-    public Booking getBookingById(@PathVariable("id") Long id){
+    public BookingResponseDTO getBookingById(@PathVariable("id") Long id){
         return bookingservice.getBookingById(id);
     }
 
     @PutMapping("/{id}")
-    public Booking updateBooking(@PathVariable("id") Long id, @RequestBody Booking booking){
+    public BookingResponseDTO updateBooking(@PathVariable("id") Long id, @RequestBody Booking booking){
 
         return bookingservice.updateBooking(id, booking);
     }
 
     @PutMapping("/{id}/cancel")
-    public Booking cancelBooking(@PathVariable("id") Long id) {
+    public BookingResponseDTO cancelBooking(@PathVariable("id") Long id) {
         return bookingservice.cancelBooking(id);
     }
 
