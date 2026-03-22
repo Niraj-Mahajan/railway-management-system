@@ -1,0 +1,12 @@
+spring.datasource.url=jdbc:mysql://localhost:3306/railway_db
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+spring.security.user.name=ABCD
+spring.security.user.password=ABCD
+```
+
+This file has NO real passwords — just dummy values showing what's needed.
