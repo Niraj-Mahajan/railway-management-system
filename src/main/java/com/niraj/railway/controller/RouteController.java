@@ -41,6 +41,7 @@ public class RouteController {
     public ResponseEntity<Void> deleteRouteById(@PathVariable("id") Long id)   {
         routeservice.deleteRoute(id);
         return ResponseEntity.noContent().build();
+
         }
 
     }

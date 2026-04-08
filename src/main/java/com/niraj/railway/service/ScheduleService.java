@@ -2,6 +2,7 @@ package com.niraj.railway.service;
 
 import com.niraj.railway.dto.ScheduleResponseDTO;
 import com.niraj.railway.entity.Schedule;
+import com.niraj.railway.exception.ResourceNotFoundException;
 import com.niraj.railway.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,14 +41,14 @@ public class ScheduleService {
     }
 
     public ScheduleResponseDTO getScheduleById(Long id){
-        Schedule schedule =  scheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Schedule not found"));
+        Schedule schedule =  scheduleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
         return convertToDTO(schedule);
 
     }
 
     public ScheduleResponseDTO updateSchedule(Long id, Schedule schedule){
 
-        Schedule existing =  scheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Schedule not found"));
+        Schedule existing =  scheduleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
         existing.setTrain(schedule.getTrain());
         existing.setRoute(schedule.getRoute());
         existing.setDepartureTime(schedule.getDepartureTime());

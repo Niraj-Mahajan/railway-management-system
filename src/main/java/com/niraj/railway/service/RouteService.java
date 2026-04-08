@@ -3,6 +3,7 @@ package com.niraj.railway.service;
 
 import com.niraj.railway.dto.RouteResponseDTO;
 import com.niraj.railway.entity.Route;
+import com.niraj.railway.exception.ResourceNotFoundException;
 import com.niraj.railway.repository.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,12 +40,12 @@ public class RouteService {
     }
 
     public RouteResponseDTO getRouteById(Long id){
-        Route route =  routeRepository.findById(id).orElseThrow(() -> new RuntimeException("Route not found"));
+        Route route =  routeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Route not found"));
         return  convertToDTO(route);
     }
 
     public RouteResponseDTO updateRoute(Long id, Route route){
-        Route existing  = routeRepository.findById(id).orElseThrow(() -> new RuntimeException("Route not found"));
+        Route existing  = routeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Route not found"));
         existing.setRouteName(route.getRouteName());
         existing.setSourceStation(route.getSourceStation());
         existing.setDestinationStation(route.getDestinationStation());

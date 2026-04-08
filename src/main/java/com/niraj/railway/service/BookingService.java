@@ -3,6 +3,7 @@ package com.niraj.railway.service;
 import com.niraj.railway.dto.BookingResponseDTO;
 import com.niraj.railway.entity.Booking;
 import com.niraj.railway.entity.Schedule;
+import com.niraj.railway.exception.ResourceNotFoundException;
 import com.niraj.railway.repository.BookingRepository;
 import com.niraj.railway.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class BookingService {
 
         //  Get the schedule
         Schedule schedule = scheduleRepository.findById(booking.getSchedule().getScheduleId())
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
 
         //  Check available seats
         if (schedule.getAvailableSeats() <= 0) {
@@ -62,13 +63,13 @@ public class BookingService {
 
     public BookingResponseDTO getBookingById(Long id){
 
-       Booking booking =   bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
+       Booking booking =   bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
        return convertToDTO(booking);
     }
 
     public BookingResponseDTO updateBooking(Long id, Booking booking){
 
-         Booking existing = bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
+         Booking existing = bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
          existing.setPassenger(booking.getPassenger());
          existing.setSchedule(booking.getSchedule());
          existing.setSeatNumber(booking.getSeatNumber());
@@ -80,7 +81,7 @@ public class BookingService {
 
     public BookingResponseDTO cancelBooking(Long id) {
         //  Get booking
-        Booking existing = bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
+        Booking existing = bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         // Check if already cancelled
         if (existing.getStatus().equals("CANCELLED")) {

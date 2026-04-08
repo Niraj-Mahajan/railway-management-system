@@ -2,6 +2,7 @@ package com.niraj.railway.service;
 
 import com.niraj.railway.dto.StationResponseDTO;
 import com.niraj.railway.entity.Station;
+import com.niraj.railway.exception.ResourceNotFoundException;
 import com.niraj.railway.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,11 +46,11 @@ public class StationService {
 
     }
     public StationResponseDTO getStationByID(Long id){
-        Station station = stationRepository.findById(id).orElseThrow(() -> new RuntimeException ("No Station available"));
+        Station station = stationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException ("No Station available"));
         return convertToDTO(station);
     }
     public StationResponseDTO updateStation(Long id, Station station){
-        Station existing = stationRepository.findById(id).orElseThrow(() -> new RuntimeException ("No Station available"));
+        Station existing = stationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Station available"));
         existing.setStationName(station.getStationName());
         existing.setStationCode(station.getStationCode());
         existing.setCity(station.getCity());
